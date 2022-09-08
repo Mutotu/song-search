@@ -1,9 +1,6 @@
 const Login = () => {
-  return (
-    <form>
-      <h1>Login</h1>
-    </form>
-  );
+  const handleSubmit = () => {};
+  return <form onSubmit={handleSubmit}></form>;
 };
 
 export default Login;

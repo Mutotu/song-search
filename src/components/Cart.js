@@ -18,8 +18,6 @@ const Cart = ({ user, setIsShowCart, setUser }) => {
                   (album) => album.collectionId !== albumToRemove
                 ),
               });
-              console.log(user);
-              console.log(albumToRemove);
             }}
           >
             Remove

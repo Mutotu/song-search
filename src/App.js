@@ -20,6 +20,7 @@ function App() {
   const [data, setData] = useState(DEFAUL_VALUE);
   const [user, setUser] = useState({ profile: { name: "" }, myAlbums: [] });
   const [isShowCart, setIsShowCart] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
   useEffect(() => {
     setData({ ...data, isSpinning: true });
     fetch(
