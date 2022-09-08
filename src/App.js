@@ -1,5 +1,7 @@
 import "./App.css";
+import { totalPrice } from "./commonUtils/utils";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Form from "./components/Form";
 import AlbumList from "./components/AlbumList";
 import Cart from "./components/Cart";
@@ -17,6 +19,7 @@ const DEFAUL_VALUE = {
 function App() {
   const [data, setData] = useState(DEFAUL_VALUE);
   const [user, setUser] = useState({ profile: { name: "" }, myAlbums: [] });
+  const [isShowCart, setIsShowCart] = useState(false);
   useEffect(() => {
     setData({ ...data, isSpinning: true });
     fetch(
@@ -33,7 +36,10 @@ function App() {
     if (data.albums.length > 0) {
       setData({ ...data, isSpinning: false });
     }
+    console.log(data.albums);
   }, [data.searchTerm]);
+
+  // useEffect(() => {}, [user.myAlbums]);
 
   const getArtistName = (artist) => {
     setData({ ...data, searchTerm: artist });
@@ -46,17 +52,33 @@ function App() {
       setData((pre) => ({ ...pre, displayMore: 20 }));
     }
   };
+
   // localStorage.setItem("test", true);
   return (
     <div className='App'>
-      <Cart />
-      <Form getArtistName={getArtistName} setData={setData} data={data} />
-      {data.resultCount > 0 ? <h3>Album Count: {data.resultCount}</h3> : null}
-      <button onClick={handleClick}>Load More</button>
-      {data.albums.length > 0 && data.searchTerm !== "" && data.isSpinning ? (
-        <Spinner />
-      ) : null}
-      <AlbumList albums={data.albums.slice(0, data.displayMore).reverse()} />
+      {isShowCart ? (
+        <Cart user={user} setIsShowCart={setIsShowCart} setUser={setUser} />
+      ) : (
+        <div>
+          <h1>Cart Total: ${totalPrice(user)}</h1>
+          <button onClick={() => setIsShowCart(true)}>Go to My Cart</button>
+          <Form getArtistName={getArtistName} setData={setData} data={data} />
+          {data.resultCount > 0 ? (
+            <h3>Album Count: {data.resultCount}</h3>
+          ) : null}
+          <button onClick={handleClick}>Load More</button>
+          {data.albums.length > 0 &&
+          data.searchTerm !== "" &&
+          data.isSpinning ? (
+            <Spinner />
+          ) : null}
+          <AlbumList
+            albums={data.albums.slice(0, data.displayMore).reverse()}
+            setUser={setUser}
+            user={user}
+          />
+        </div>
+      )}
     </div>
   );
 }
