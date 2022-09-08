@@ -1,6 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import Form from "./components/Form";
+import AlbumList from "./components/AlbumList";
 
 function App() {
   const [data, setData] = useState({ searchTerm: "", albums: [] });
@@ -25,8 +26,8 @@ function App() {
 
   return (
     <div className='App'>
-      <h1>App</h1>
       <Form getArtistName={getArtistName} setData={setData} data={data} />
+      <AlbumList albums={data.albums} />
     </div>
   );
 }

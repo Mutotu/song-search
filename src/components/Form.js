@@ -7,7 +7,6 @@ const Form = ({ setData, data }) => {
 
   return (
     <>
-      <h1>Form</h1>
       <form onSubmit={handleSubmit}>
         <input
           type='text'
