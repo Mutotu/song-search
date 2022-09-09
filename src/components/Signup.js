@@ -1,26 +1,21 @@
 import { useState } from "react";
 
-let DUMMY_DATA = { username: "test", password: "123" };
-const DEFAULT_VALUE = { username: "", password: "" };
-const Login = () => {
+const DEFAULT_VALUE = { username: "", password: "", rePassword: "" };
+const Signup = () => {
   const [userInfo, setUserInfo] = useState(DEFAULT_VALUE);
   const handleChange = (e) => {
     setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (
-      userInfo.username === DUMMY_DATA.username &&
-      userInfo.password === DUMMY_DATA.password
-    ) {
-      console.log("Logged in");
-      localStorage.setItem("username", userInfo.username);
-    } else console.log("userInfo:", userInfo);
+    if (userInfo.password !== userInfo.rePassword)
+      console.log("Passwords don't match");
+    else console.log("userInfo:", userInfo);
   };
 
   return (
     <div>
-      <h1>Login </h1>
+      <h1>Sign in </h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor='username'>
           Username
@@ -40,11 +35,19 @@ const Login = () => {
             onChange={handleChange}
           />
         </label>
-
+        <label htmlFor='rePassword'>
+          Re-enter password
+          <input
+            type='password'
+            name='rePassword'
+            value={userInfo.rePassword}
+            onChange={handleChange}
+          />
+        </label>
         <button type='submit'>Register</button>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Signup;

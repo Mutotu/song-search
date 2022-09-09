@@ -5,9 +5,11 @@ import { Link } from "react-router-dom";
 import Form from "./components/Form";
 import AlbumList from "./components/AlbumList";
 import Cart from "./components/Cart";
-import Signin from "./components/Signin";
-import Login from "./components/Login";
 import Spinner from "./components/Spinner";
+import Signup from "./components/Signup";
+import Login from "./components/Login";
+
+const options = { signup: Signup, login: Login };
 
 const DEFAUL_VALUE = {
   searchTerm: "",
@@ -20,7 +22,8 @@ function App() {
   const [data, setData] = useState(DEFAUL_VALUE);
   const [user, setUser] = useState({ profile: { name: "" }, myAlbums: [] });
   const [isShowCart, setIsShowCart] = useState(false);
-  const [isLogged, setIsLogged] = useState(false);
+  const [option, setOption] = useState({ currentPage: "login" });
+
   useEffect(() => {
     setData({ ...data, isSpinning: true });
     fetch(
@@ -40,7 +43,14 @@ function App() {
     console.log(data.albums);
   }, [data.searchTerm]);
 
-  // useEffect(() => {}, [user.myAlbums]);
+  const handleOptions = (page) => {
+    setOption({ currentPage: page });
+  };
+
+  const getCurrentPage = () => {
+    const CurrentPage = options[option.currentPage];
+    return <CurrentPage />;
+  };
 
   const getArtistName = (artist) => {
     setData({ ...data, searchTerm: artist });
@@ -54,10 +64,53 @@ function App() {
     }
   };
 
-  // localStorage.setItem("test", true);
   return (
     <div className='App'>
-      {isShowCart ? (
+      {!localStorage.getItem("username") ? (
+        <div>
+          {Object.keys(options).map((page) => {
+            return (
+              <a key={page} href='##' onClick={() => handleOptions(page)}>
+                {page}
+              </a>
+            );
+          })}
+          <div>{getCurrentPage()}</div>
+        </div>
+      ) : null}
+
+      {localStorage.getItem("username") ? (
+        <div>
+          {isShowCart ? (
+            <Cart user={user} setIsShowCart={setIsShowCart} setUser={setUser} />
+          ) : (
+            <div>
+              <h1>Cart Total: ${totalPrice(user)}</h1>
+              <button onClick={() => setIsShowCart(true)}>Go to My Cart</button>
+              <Form
+                getArtistName={getArtistName}
+                setData={setData}
+                data={data}
+              />
+              {data.resultCount > 0 ? (
+                <h3>Album Count: {data.resultCount}</h3>
+              ) : null}
+              <button onClick={handleClick}>Load More</button>
+              {data.albums.length > 0 &&
+              data.searchTerm !== "" &&
+              data.isSpinning ? (
+                <Spinner />
+              ) : null}
+              <AlbumList
+                albums={data.albums.slice(0, data.displayMore).reverse()}
+                setUser={setUser}
+                user={user}
+              />
+            </div>
+          )}
+        </div>
+      ) : null}
+      {/* {isShowCart ? (
         <Cart user={user} setIsShowCart={setIsShowCart} setUser={setUser} />
       ) : (
         <div>
@@ -79,7 +132,7 @@ function App() {
             user={user}
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 }

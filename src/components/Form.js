@@ -15,9 +15,6 @@ const Form = ({ setData, data }) => {
             setData({ ...data, searchTerm: e.target.value });
           }}
         />
-        {/* <button type='submit' >
-          <i className='fa-search'></i>
-        </button> */}
       </form>
     </>
   );
